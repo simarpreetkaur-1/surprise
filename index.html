@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Surprise For You 💖</title>
+  
+  <style>
+    /* MOBILE-FRIENDLY DODGE & WIGGLE ANIMATION */
+    @keyframes dodgeLoop {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(25px, -10px) rotate(8deg); }
+      50%  { transform: translate(-20px, 12px) rotate(-8deg); }
+      75%  { transform: translate(15px, -15px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .dodging-btn {
+      animation: dodgeLoop 2.5s infinite ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e6e6fa, #e0f7fa, #fff0f5);
+      color: #4a4a4a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    /* MAIN CARD CONTAINER */
+    /* MAIN CARD CONTAINER */
+    .app-container {
+      background-color: #ffffff;
+      border-radius: 24px;
+      padding: 25px 20px;
+      max-width: 480px;
+      width: 100%;
+      height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 0.88rem;
+      color: #777;
+    }
+
+    /* 6-CARD GRID (3 ROWS, 2 COLUMNS) */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .memory-btn {
+      border-radius: 18px;
+      padding: 14px 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      border: 2px solid transparent;
+    }
+
+    .memory-btn span.emoji { font-size: 1.7rem; }
+    .memory-btn span.label { font-size: 0.85rem; font-weight: 700; }
+
+    /* PASTEL COLOR PALETTE FOR CARDS */
+    .card-lavender { background-color: #f3e8ff; border-color: #d8b4fe; color: #6b21a8; }
+    .card-mint     { background-color: #e6f4ea; border-color: #a8e6cf; color: #1b4332; }
+    .card-butter   { background-color: #fef9c3; border-color: #fef08a; color: #854d0e; }
+    .card-sky      { background-color: #e0f2fe; border-color: #bae6fd; color: #0369a1; }
+    .card-peach    { background-color: #ffedd5; border-color: #fed7aa; color: #c2410c; }
+    .card-pink     { background-color: #ffe4e1; border-color: #fbcfe8; color: #9d174d; }
+
+    .memory-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    /* FINAL LETTER BUTTON */
+    .final-btn {
+      background: linear-gradient(135deg, #fbcfe8, #fed7aa, #fef08a, #a7f3d0, #bae6fd);
+      color: #334155;
+      border: none;
+      padding: 14px;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s;
+    }
+
+    .final-btn:hover { transform: scale(1.02); }
+
+    /* SUB-PAGES / OVERLAYS */
+    .sub-page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      padding: 25px 20px;
+      display: none; /* Hidden by default */
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      animation: popIn 0.3s ease forwards;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .sub-page-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      overflow-y: auto; /* Handles image scrolling cleanly */
+    }
+
+    /* IMAGE STYLING */
+    .img-container {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .img-container img, .single-img {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .sub-page-content h2 { font-size: 1.3rem; margin-top: 5px; }
+    .sub-page-content p { font-size: 0.92rem; line-height: 1.5; color: #444; }
+
+    .back-btn {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #333;
+      border: 1px solid #ddd;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: center;
+      margin-top: 8px;
+    }
+
+    /* PROMISE GAME BUTTONS */
+    .game-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .yes-btn, .no-btn {
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .yes-btn { background-color: #4ade80; color: white; }
+    .no-btn  { background-color: #f87171; color: white; }
+
+/* LOCK / COVER PAGE STYLING */
+.cover-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #fff0f5, #e6e6fa, #e0f7fa);
+  border-radius: 24px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 99; /* Keeps it on top until unlocked */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.secret-input {
+  width: 85%;
+  padding: 12px 16px;
+  border: 2px solid #d8b4fe;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  outline: none;
+  margin: 15px 0 10px 0;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+.secret-input:focus {
+  border-color: #db7093;
+  box-shadow: 0 0 8px rgba(219, 112, 147, 0.3);
+}
+
+.unlock-btn {
+  background: linear-gradient(135deg, #db7093, #c75b7e);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+  transition: transform 0.2s;
+}
+
+.unlock-btn:hover {
+  transform: scale(1.03);
+}
+
+.error-msg {
+  color: #e11d48;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-height: 20px;
+  margin-top: 5px;
+}
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- COVER / LOCK PAGE -->
+    <div class="cover-page" id="coverPage">
+      <span style="font-size: 3rem; margin-bottom: 10px;">🔐✨</span>
+      <h1 style="font-size: 1.5rem; color: #333; margin-bottom: 8px;">A Secret For You!</h1>
+      <p style="font-size: 0.9rem; color: #666; line-height: 1.5; padding: 0 10px;">
+        Before you enter, answer this special memory question to unlock your surprise:
+      </p>
+
+      <!-- QUESTION / PROMPT FOR HER -->
+      <p style="font-size: 0.95rem; font-weight: 700; color: #6b21a8; margin-top: 15px;">
+        What is our favorite memory? 🤔
+      </p>
+
+      <!-- TEXT INPUT FIELD -->
+      <input type="text" id="passcode" class="secret-input" placeholder="Type here..." onkeypress="handleKeyPress(event)">
+
+      <button class="unlock-btn" onclick="checkPasscode()">Unlock Surprise 💖</button>
+
+      <!-- WRONG ANSWER MESSAGE -->
+      <p id="errorMsg" class="error-msg"></p>
+    </div>
+    <!-- HOME PAGE -->
+    <div class="header">
+      <h1>Happy Friendship & Sisters Day! 🌸</h1>
+      <p>Tap a memory card below to unlock a story!</p>
+    </div>
+
+    <div class="memory-grid">
+      <!-- Card 1 -->
+      <button class="memory-btn card-lavender" onclick="openPage('page1')">
+        <span class="emoji">🤪</span>
+        <span class="label">That Dumb Moment</span>
+      </button>
+
+      <!-- Card 2 -->
+      <button class="memory-btn card-mint" onclick="openPage('page2')">
+        <span class="emoji">📸</span>
+        <span class="label">Funny Archives</span>
+      </button>
+
+      <!-- Card 3 -->
+      <button class="memory-btn card-butter" onclick="openPage('page3')">
+        <span class="emoji">🛡️</span>
+        <span class="label">All Time Therapist</span>
+      </button>
+
+      <!-- Card 4 -->
+      <button class="memory-btn card-sky" onclick="openPage('page4')">
+        <span class="emoji">🎒</span>
+        <span class="label">School Rivals to Besties</span>
+      </button>
+
+      <!-- Card 5 -->
+      <button class="memory-btn card-peach" onclick="openPage('page5')">
+        <span class="emoji">👯‍♀️</span>
+        <span class="label">Twinning Moments</span>
+      </button>
+
+      <!-- Card 6 -->
+      <button class="memory-btn card-pink" onclick="openPage('page6')">
+        <span class="emoji">🤝</span>
+        <span class="label">A Tiny Promise</span>
+      </button>
+    </div>
+
+    <!-- FINAL BUTTON -->
+    <button class="final-btn" onclick="openPage('finalPage')">
+      Read Final Letter ❤️
+    </button>
+
+
+    <!-- SUB-PAGE 1: THAT DUMB MOMENT -->
+    <div class="sub-page card-lavender" id="page1">
+      <div class="sub-page-content">
+        <h2>That Dumb Moment 🤪</h2>
+        <div class="img-container">
+          <!-- Replace photo1.jpg with your photo filename -->
+          <img src="DUMB_MOMENT.jpeg.jpeg" alt="Our dumb memory!">
+        </div>
+        <p>kya mst harkatee krtee h humm kitnee mjee aatee h sthhh m, hrr ek momentt bad m hassii orr khushi orr pglpan sbb ydd karata hh joo jo time m apke sth spendd kiyaa sbb kitnaa memorable h naa</p>
+      </div>
+      <button class="back-btn" onclick="closePage('page1')">← Back to Hub</button>
+    </div>
+
+
+  <!-- SUB-PAGE 2: FUNNY ARCHIVES -->
+    <div class="sub-page card-mint" id="page2">
+      <div class="sub-page-content">
+        <h2>Funny Archives 📸</h2>
+        
+        <!-- THREE PICS GRID WITH TALLER HEIGHT -->
+        <div class="img-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%;">
+          <img src="funny1.jpeg" alt="Funny memory 1" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+          <img src="funny2.jpeg" alt="Funny memory 2" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+          <img src="funny3.jpeg" alt="Funny memory 3" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+        </div>
+
+        <p>myy cutiee pieee withh the mostt cutest andd happiesttt andd funniest facesss lovee uu alott!!</p>
+      </div>
+      <button class="back-btn" onclick="closePage('page2')">← Back to Hub</button>
+    </div>
+
+
+    <!-- SUB-PAGE 3: ALL TIME THERAPIST -->
+    <div class="sub-page card-butter" id="page3">
+      <div class="sub-page-content">
+        <h2>My All Time Therapist 🛡️</h2>
+        <p style="font-size: 1rem;">Whenever there is a problem i know i have my sista my bestie everytime there for me at my lowest, in any problem, everytime.</p>
+        <p>thankuuuu sooo muchh my janee for always being there for me, being my person, my safe place everytime. My sister from another motherrr my soul sistaa i am always blessed to have you and I always thank god for sending you in my life . 💖</p>
+      </div>
+      <button class="back-btn" onclick="closePage('page3')">← Back to Hub</button>
+    </div>
+
+
+   <!-- SUB-PAGE 4: SCHOOL RIVALS TO BESTIES -->
+    <div class="sub-page card-sky" id="page4">
+      <div class="sub-page-content">
+        <h2>From Rivals to Soul Sisters 🎒</h2>
+        
+        <!-- TOP ROW: SEPARATE SCHOOL PICS (RIVAL 1 & RIVAL 2) -->
+        <div class="img-container" style="display: flex; gap: 10px; justify-content: center; width: 100%;">
+          <img src="rival1.jpeg" alt="Rivalry school pic 1" style="width: 48%; max-height: 180px; object-fit: contain; border-radius: 12px;">
+          <img src="rival2.jpeg" alt="Rivalry school pic 2" style="width: 48%; max-height: 180px; object-fit: contain; border-radius: 12px;">
+        </div>
+
+        <p style="margin: 8px 0;">
+          Back in the day, we were school rivals constantly competing for 1st place 🏆—not even close enough to stand together in the same picture(ignore my picccc!!!)
+        </p>
+
+        <!-- BOTTOM ROW: TOGETHER PIC (RIVAL 3) -->
+        <div class="img-container" style="display: flex; justify-content: center; width: 100%;">
+          <img src="rival3.jpeg" alt="Us together now" style="width: 90%; max-height: 200px; object-fit: contain; border-radius: 12px;">
+        </div>
+
+        <p style="margin-top: 6px; font-weight: 600; color: #0369a1;">
+          Look at us now! Who knew my biggest competitor would become my absolute best friend and sister for life? MERI KISMAT CHAMAK GAYI FOR SUREEEE💖
+        </p>
+      </div>
+      <button class="back-btn" onclick="closePage('page4')">← Back to Hub</button>
+    </div>
+
+   <!-- SUB-PAGE 5: TWINNING MOMENTS -->
+    <div class="sub-page card-peach" id="page5">
+      <div class="sub-page-content">
+        <h2>Twinning Moments 👯‍♀️</h2>
+        
+        <!-- THREE TWINNING PICS GRID -->
+        <div class="img-container" style="display: flex; gap: 8px; justify-content: center; width: 100%;">
+          <img src="twin1.jpeg" alt="Twinning moment 1" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+          <img src="twin2.jpeg" alt="Twinning moment 2" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+          <img src="twin3.jpeg" alt="Twinning moment 3" style="width: 30%; max-height: 220px; object-fit: contain; border-radius: 12px;">
+        </div>
+
+        <p style="margin-top: 10px;">
+         not onlyy matching outfits we haveee our part of lifes sharing and matching how special it is to have you in my lifee🥹🥹🥹🥹        </p>
+      </div>
+      <button class="back-btn" onclick="closePage('page5')">← Back to Hub</button>
+    </div>
+
+
+   <!-- SUB-PAGE 6: INTERACTIVE PROMISE GAME -->
+    <div class="sub-page card-pink" id="page6">
+      <div class="sub-page-content">
+        <h2>A Very Important Question 👑</h2>
+        <p style="font-size: 1.05rem; font-weight: 600;">You are stuck with me for life. Do you promise to stay my best friend and sister forever?</p>
+        
+        <div class="game-buttons" style="display: flex; gap: 15px; margin-top: 15px; justify-content: center; position: relative;">
+          <button class="yes-btn" onclick="celebrateYes()">YES! ✨</button>
+          
+          <!-- RUNAWAY/AUTO-TRANSFORMING NO BUTTON -->
+          <button class="no-btn" id="noBtn" class="dodging-btn" onclick="forceYes()" onmouseover="forceYes()">
+            NO 😜
+          </button>
+        </div>
+
+        <p id="funnyResponseText" style="font-size: 0.9rem; color: #888; margin-top: 15px; min-height: 24px; font-weight: 600;"></p>
+      </div>
+      <button class="back-btn" onclick="closePage('page6')">← Back to Hub</button>
+    </div>
+
+
+    <!-- FINAL LETTER PAGE -->
+    <div class="sub-page" id="finalPage" style="background-color: #fff0f5;">
+      <div class="sub-page-content" style="justify-content: flex-start; padding-top: 10px;">
+        <h2>To My Dearest Sister & Best Friend 💌</h2>
+        
+        <!-- FINAL IMAGE -->
+        <div class="img-container" style="display: flex; justify-content: center; width: 100%; margin: 10px 0;">
+          <img src="final.jpeg" alt="Our final special picture" style="width: 90%; max-height: 200px; object-fit: contain; border-radius: 14px;">
+        </div>
+
+        <!-- WRITE YOUR PERSONAL LETTER / MESSAGE HERE -->
+        <p style="font-size: 0.95rem; line-height: 1.6; color: #333; text-align: left; padding: 0 5px;">
+          My forever my sista first of all happy sister's day and a very happy friendship day. Thankuu for telling me what real friendship is thnkuu for being my sister by choice. thnkuu for being my forever. I don't know how to express my emotions towrds you about my lovee to you, but what i know is i loveee uuu sooo muchhh!!!! ab apni bhasha m ajatee h😋 m bhot gltiyaa krri h shyd hdd se jyada tbb bhi mere sth rehne ke liyee muje smjhane smjhne ke liyee hrr chizz ke liye thnkuuu....m bhot luckyy ki muje app milee aap meri cutie piee meri gulguliii mere rasgullee hoo hmeshaa mere sthhh rehnee kaa promisee too kr hi chuke ho app hainaa apke pas noo ka koi option hi nhi hmesha sth hii rehnaa h abbb ttoooo!!!
+AGAINN HAPPIESTT FRIENDSHIP DAY AND SISTER'S DAY MY SOUL SISTA!!!!!
+          <br><br>
+          
+        </p>
+      </div>
+      <button class="back-btn" onclick="closePage('finalPage')">← Back to Hub</button>
+    </div>
+
+  </div>
+
+  <!-- JAVASCRIPT -->
+ <script>
+// DEFINE YOUR SECRET KEYWORD HERE (In lowercase)
+    var secretAnswer = "simar"; // <--- CHANGE THIS TO YOUR SPECIAL WORD!
+
+    function checkPasscode() {
+      var userInput = document.getElementById("passcode").value.trim().toLowerCase();
+      var errorElement = document.getElementById("errorMsg");
+
+      // Check if user input matches or if you want ANY non-empty answer to pass
+      if (userInput !== secretAnswer) {
+        // Correct Answer! Hide cover page smoothly
+        var cover = document.getElementById("coverPage");
+        cover.style.opacity = "0";
+        cover.style.transform = "scale(1.1)";
+        setTimeout(function() {
+          cover.style.display = "none";
+        }, 500);
+      } else {
+        // Wrong Answer Feedback
+        errorElement.innerText = "Oops! Wrong memory word, try again! 😜";
+      }
+    }
+
+    // Allows pressing 'Enter' key on phone keyboard to unlock
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        checkPasscode();
+      }
+    }
+    function openPage(pageId) {
+      document.getElementById(pageId).style.display = 'flex';
+      
+      // If she opens Card 6 on mobile, activate the dodging animation!
+      if (pageId === 'page6') {
+        var noBtn = document.getElementById("noBtn");
+        noBtn.classList.add("dodging-btn");
+        
+        // Auto-transforms into YES after 3.5 seconds if she just stares at it on mobile!
+        setTimeout(function() {
+          forceYes();
+        }, 3500);
+      }
+    }
+
+    function closePage(pageId) {
+      document.getElementById(pageId).style.display = 'none';
+    }
+
+    /* TURNS "NO" INTO "YES!" */
+    function forceYes() {
+      var noBtn = document.getElementById("noBtn");
+      noBtn.innerText = "YES! 💖";
+      noBtn.style.backgroundColor = "#4ade80";
+      noBtn.classList.remove("dodging-btn");
+      document.getElementById("funnyResponseText").innerText = "Nice try! The 'NO' button refused to exist! 😂";
+    }
+
+    function celebrateYes() {
+      document.getElementById("funnyResponseText").innerText = "Yay! Best friends and sisters forever! 💖✨";
+    }
+  </script>
+
+</body>
+</html>
