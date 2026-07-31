@@ -41,11 +41,11 @@
     .app-container {
       background-color: #ffffff;
       border-radius: 24px;
-      padding: 20px 15px;
+      padding: 20px 15px 30px 15px; /* Added 30px bottom padding to lift Final Letter button */
       max-width: 480px;
       width: 100%;
-      height: 94vh;
-      max-height: 850px;
+      height: 90vh;
+      max-height: 820px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -102,7 +102,7 @@
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
     }
 
-    /* FINAL LETTER BUTTON */
+    /* LIFTED FINAL LETTER BUTTON */
     .final-btn {
       background: linear-gradient(135deg, #fbcfe8, #fed7aa, #fef08a, #a7f3d0, #bae6fd);
       color: #334155;
@@ -114,27 +114,30 @@
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
       transition: transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 5px;
+      margin-bottom: 10px; /* Lifts button up from the bottom edge */
     }
 
     .final-btn:hover { transform: scale(1.02); }
 
     /* SUB-PAGES / OVERLAYS */
-   .sub-page {
+    .sub-page {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       border-radius: 24px;
-      padding: 15px 12px;
+      padding: 20px 15px 30px 15px; /* Added 30px bottom padding to lift Back to Hub button */
       display: none; /* Hidden by default */
       flex-direction: column;
-      justify-content: space-between; /* Pushes content up and button down */
+      justify-content: space-between;
       text-align: center;
       animation: popIn 0.3s ease forwards;
       z-index: 10;
       box-sizing: border-box;
-      overflow: hidden; /* Prevents whole card from breaking */
+      background-color: inherit;
     }
 
     @keyframes popIn {
@@ -142,15 +145,18 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-   .sub-page-content {
+    /* VERTICALLY CENTERED INNER CONTENT */
+    .sub-page-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      overflow-y: auto; /* ENABLES INTERNAL SCROLLING FOR IMAGES & TEXT */
-      flex: 1; /* Takes up remaining space above the button */
-      padding-bottom: 10px;
+      justify-content: center; /* Centers title, photo, and text vertically */
+      gap: 12px;
+      overflow-y: auto;
+      flex: 1;
+      padding: 10px 5px;
       width: 100%;
+      margin: auto 0; /* Ensures vertical centering in all screens */
     }
 
     /* IMAGE STYLING */
@@ -173,8 +179,8 @@
     .sub-page-content h2 { font-size: 1.25rem; margin-top: 5px; }
     .sub-page-content p { font-size: 0.9rem; line-height: 1.5; color: #444; }
 
-    /* MOBILE UNIFORM BACK BUTTON */
-  .back-btn {
+    /* LIFTED UNIFORM BACK BUTTON */
+    .back-btn {
       background-color: #ffffff;
       color: #333;
       border: 1.5px solid #d1d5db;
@@ -184,8 +190,8 @@
       font-weight: 700;
       cursor: pointer;
       align-self: center;
-      margin-top: 5px;
-      margin-bottom: 5px;
+      margin-top: 10px;
+      margin-bottom: 10px; /* Lifts button up from the bottom line */
       flex-shrink: 0; /* CRITICAL: STOPS BUTTON FROM BEING SQUISHED OR PUSHED OUT */
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       transition: transform 0.2s, background-color 0.2s;
@@ -232,7 +238,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      z-index: 99;
+      z-index: 999;
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
@@ -487,7 +493,7 @@
       var userInput = document.getElementById("passcode").value.trim().toLowerCase();
       var errorElement = document.getElementById("errorMsg");
 
-      if (userInput !== secretAnswer) {
+      if (userInput === secretAnswer) {
         var cover = document.getElementById("coverPage");
         cover.style.opacity = "0";
         cover.style.transform = "scale(1.1)";
